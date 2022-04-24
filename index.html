@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@800&display=swap" rel="stylesheet">
+  <title>Frontend Mentor | Advice generator app</title>
+
+  <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Manrope', sans-serif;
+    }
+    :root {
+      --grayish-blue: hsl(217, 19%, 38%);
+      --dark-grayish-blue: hsl(217, 19%, 24%);
+      --dark-blue: hsl(218, 23%, 16%);
+
+      --light-cyan: hsl(193, 38%, 86%);
+      --neon-green: hsl(150, 100%, 66%);
+    }
+    .container {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: var(--dark-blue);
+    }
+    .advice-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: calc(100vw - 2rem);
+      text-align: center;
+      border-radius: 1rem;
+      background-color: var(--dark-grayish-blue);
+      padding: 2rem;
+      transform: scale(1,1);
+      transition: 0.75s all ease-in-out;
+    }
+    .advice-header {
+      font-size: 0.8rem;
+      line-height: 1.4rem;
+      letter-spacing: 0.15rem;
+      font-weight: normal;
+      color: var(--neon-green);
+      margin-bottom: 1.5rem;
+    }
+    .advice-text {
+      width: 295px;
+      font-size: 1rem;
+      line-height: 2.5rem;
+      color: var(--light-cyan);
+      margin-bottom: 1.5rem;
+    }
+    .fetching {
+      transform: scale(0,0) rotate(360deg);
+    }
+    .advice-divider {
+      margin-bottom: 1.5rem;
+    }
+    .advice-text,
+    .advice-divider {
+      width: calc(100vw - 5rem);
+    }
+    .advice-control {
+      position: absolute;
+      bottom: -1.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      border: 1px solid transparent;
+      background-color: var(--neon-green);
+      transition: 0.5s all ease-out;
+    }
+    .advice-control:hover {
+      cursor: pointer;
+      box-shadow: 0 0 2rem var(--neon-green);
+    }
+    .advice-control:focus:not(:focus-visible) {
+      transform: rotate(360deg);
+    }
+    @media screen and (min-width: 360px) and (max-width: 424px) {
+      .advice-card {
+        width: auto;
+      }
+      .advice-text,
+      .advice-divider {
+        font-size: 1.75rem;
+        min-width: 295px;
+      }
+    }
+    @media screen and (min-width: 425px) {
+      .advice-card {
+        width: auto;
+      }
+      .advice-text,
+      .advice-divider {
+        width: clamp(295px, 295px + 15vw, 444px);
+        max-width: 444px;
+        font-size: 1.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="advice-card fetching">
+      <h1 class="advice-header"></h1>
+      <p class="advice-text"></p>
+      <picture>
+        <source srcset="./images/pattern-divider-desktop.svg" media="(min-width: 570px)">
+        <img class="advice-divider" src="./images/pattern-divider-mobile.svg" alt="Divider between text and button">
+      </picture>
+      <button class="advice-control" onclick="getNewAdvice()">
+        <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg"><path d="M20 0H4a4.005 4.005 0 0 0-4 4v16a4.005 4.005 0 0 0 4 4h16a4.005 4.005 0 0 0 4-4V4a4.005 4.005 0 0 0-4-4ZM7.5 18a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm0-9a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm4.5 4.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm4.5 4.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm0-9a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Z" fill="#202733"/></svg>
+      </button>
+    </div>
+  </div>
+  <script>
+    const card = document.querySelector('.advice-card');
+    const header = document.querySelector('.advice-header');
+    const text = document.querySelector('.advice-text');
+    const control = document.querySelector('.advice-control');
+    const getNewAdvice = async () => {
+      if(!card.classList.contains('fetching')) {
+        card.classList.add('fetching');
+      }
+      setTimeout(() =>
+      fetch('https://api.adviceslip.com/advice')
+        .then(response => response.json())
+        .then(json => {
+          let {id, advice} = json.slip;
+          header.innerText = `ADVICE #${id}`;
+          text.innerText = `"${advice}"`;
+          document.activeElement.blur();
+        })
+        .finally(() => card.classList.remove('fetching')), 750);
+    }
+    getNewAdvice();
+  </script>
+</body>
+</html>
