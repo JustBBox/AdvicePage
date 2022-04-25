@@ -44,7 +44,7 @@
       background-color: var(--dark-grayish-blue);
       padding: 2rem;
       transform: scale(1,1);
-      transition: 0.75s all ease-in-out;
+      transition: 0.75s transform ease-in-out;
     }
     .advice-header {
       font-size: 0.8rem;
@@ -82,7 +82,7 @@
       border-radius: 50%;
       border: 1px solid transparent;
       background-color: var(--neon-green);
-      transition: 0.5s all ease-out;
+      transition: 0.5s transform ease-out;
     }
     .advice-control:hover {
       cursor: pointer;
@@ -115,24 +115,23 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="advice-card fetching">
-      <h1 class="advice-header"></h1>
+  <main class="container">
+    <section class="advice-card fetching">
+      <h1 class="advice-header">ADVICE</h1>
       <p class="advice-text"></p>
       <picture>
         <source srcset="./images/pattern-divider-desktop.svg" media="(min-width: 570px)">
         <img class="advice-divider" src="./images/pattern-divider-mobile.svg" alt="Divider between text and button">
       </picture>
-      <button class="advice-control" onclick="getNewAdvice()">
+      <button class="advice-control" onclick="getNewAdvice()" aria-label="Get new advice">
         <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg"><path d="M20 0H4a4.005 4.005 0 0 0-4 4v16a4.005 4.005 0 0 0 4 4h16a4.005 4.005 0 0 0 4-4V4a4.005 4.005 0 0 0-4-4ZM7.5 18a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm0-9a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm4.5 4.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm4.5 4.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm0-9a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Z" fill="#202733"/></svg>
       </button>
-    </div>
-  </div>
+    </section>
+  </main>
   <script>
     const card = document.querySelector('.advice-card');
     const header = document.querySelector('.advice-header');
     const text = document.querySelector('.advice-text');
-    const control = document.querySelector('.advice-control');
     const getNewAdvice = async () => {
       if(!card.classList.contains('fetching')) {
         card.classList.add('fetching');
